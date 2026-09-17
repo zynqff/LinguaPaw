@@ -37,10 +37,9 @@ struct HistoryView: View {
         .onReceive(NotificationCenter.default.publisher(for: .historyArchiveDidChange)) { _ in
             reload()
         }
-        .confirmationDialog(
+        .alert(
             "Очистить всю историю переводов?",
-            isPresented: $showClearConfirm,
-            titleVisibility: .visible
+            isPresented: $showClearConfirm
         ) {
             Button("Очистить всё", role: .destructive) {
                 vm.clearArchivedHistoryConfirmed()
@@ -63,7 +62,7 @@ struct HistoryView: View {
             Image("history-empty")
                 .resizable()
                 .scaledToFit()
-                .frame(maxWidth: 220, maxHeight: 220)
+                .frame(maxWidth: 280, maxHeight: 280)
 
             VStack(spacing: 10) {
                 Text("Здесь будет история ваших переводов")
