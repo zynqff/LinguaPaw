@@ -9,7 +9,7 @@ struct LinguaPawApp: App {
     var body: some Scene {
         WindowGroup {
             Group {
-                if onboardingCompleted { TranslationView() } else { OnboardingView() }
+                if onboardingCompleted { MainTabView() } else { OnboardingView() }
             }
             .environmentObject(viewModel)
             .preferredColorScheme(theme == "light" ? .light : theme == "dark" ? .dark : nil)
