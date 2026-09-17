@@ -60,10 +60,9 @@ struct SettingsView: View {
                 Section { Button("Показать обучение заново") { UserDefaults.standard.set(false, forKey: "onboardingCompleted") } }
             }
             .navigationTitle("Настройки")
-            .confirmationDialog(
+            .alert(
                 "Удалить модель?",
-                isPresented: $vm.showDeleteConfirmation,
-                titleVisibility: .visible
+                isPresented: $vm.showDeleteConfirmation
             ) {
                 Button("Удалить", role: .destructive) { vm.confirmDeleteModel() }
                 Button("Отмена", role: .cancel) {}
@@ -85,10 +84,9 @@ struct SettingsView: View {
             } message: {
                 Text("У вас установлена последняя версия модели.")
             }
-            .confirmationDialog(
+            .alert(
                 "Найдено обновление",
-                isPresented: isUpdateAvailablePresented,
-                titleVisibility: .visible
+                isPresented: isUpdateAvailablePresented
             ) {
                 Button("Загрузить") { Task { await vm.installAvailableUpdate() } }
                 Button("Отмена", role: .cancel) { vm.updateCheckStatus = .idle }
