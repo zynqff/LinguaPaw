@@ -13,14 +13,14 @@ struct TranslationCardView: View {
             Divider()
 
             HStack {
-                Text(languageAutonym(item.targetLang)).font(.caption).foregroundStyle(Color.accentColor)
+                Text(languageAutonym(item.targetLang)).font(.caption).foregroundStyle(LinguaPawTheme.brandStart)
                 Spacer()
                 Button { UIPasteboard.general.string = item.translated } label: {
                     Image(systemName: "doc.on.doc")
                 }
                 .buttonStyle(.plain)
             }
-            Text(item.translated).font(.system(size: 19, weight: .semibold)).foregroundStyle(Color.accentColor)
+            Text(item.translated).font(.system(size: 19, weight: .semibold)).foregroundStyle(LinguaPawTheme.brandStart)
         }
         .padding()
         .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 16))
