@@ -1,6 +1,12 @@
 import Foundation
 import CoreData
 
+extension Notification.Name {
+    /// Постится при любом изменении архива истории (добавление или полная очистка),
+    /// чтобы экран «История» мог обновить список.
+    static let historyArchiveDidChange = Notification.Name("historyArchiveDidChange")
+}
+
 final class HistoryStore {
     static let shared = HistoryStore()
     let container: NSPersistentContainer
@@ -34,6 +40,9 @@ final class HistoryStore {
         return base.appendingPathComponent("History.sqlite")
     }
 
+    /// Добавляет один перевод в постоянный архив (экран «История»).
+    /// Вызывается не сразу при подтверждении перевода, а когда текущая сессия
+    /// «уходит» в архив — см. `TranslatorViewModel.appDidEnterBackground()`.
     func add(_ item: TranslationItem) {
         let object = NSEntityDescription.insertNewObject(forEntityName: "HistoryEntry", into: container.viewContext)
         object.setValue(item.source, forKey: "sourceText")
@@ -42,9 +51,26 @@ final class HistoryStore {
         object.setValue(item.targetLang, forKey: "targetLang")
         object.setValue(item.date, forKey: "timestamp")
         try? container.viewContext.save()
+        NotificationCenter.default.post(name: .historyArchiveDidChange, object: nil)
     }
 
-    /// Полностью очищает сохранённую историю переводов
+    /// Возвращает весь сохранённый архив истории, от новых к старым.
+    func fetchAll() -> [TranslationItem] {
+        let request = NSFetchRequest<NSManagedObject>(entityName: "HistoryEntry")
+        request.sortDescriptors = [NSSortDescriptor(key: "timestamp", ascending: false)]
+        guard let objects = try? container.viewContext.fetch(request) else { return [] }
+        return objects.map { object in
+            TranslationItem(
+                source: object.value(forKey: "sourceText") as? String ?? "",
+                translated: object.value(forKey: "translatedText") as? String ?? "",
+                sourceLang: object.value(forKey: "sourceLang") as? String ?? "",
+                targetLang: object.value(forKey: "targetLang") as? String ?? "",
+                date: object.value(forKey: "timestamp") as? Date ?? .now
+            )
+        }
+    }
+
+    /// Полностью очищает сохранённую историю переводов. Необратимо.
     func clearAll() {
         let context = container.viewContext
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "HistoryEntry")
@@ -52,5 +78,6 @@ final class HistoryStore {
             objects.forEach { context.delete($0) }
             try? context.save()
         }
+        NotificationCenter.default.post(name: .historyArchiveDidChange, object: nil)
     }
 }
