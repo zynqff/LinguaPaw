@@ -17,6 +17,12 @@
 		00000000000000002000000A /* TranslationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000000000001000000A; };
 		00000000000000002000000B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 00000000000000001000000B; };
 		00000000000000002000000C /* PrivacyPolicyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000000000001000000C; };
+		00000000000000002000000D /* TranslationCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000000000001000000D; };
+		00000000000000002000000E /* DownloadPromptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000000000001000000E; };
+		00000000000000002000000F /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000000000001000000F; };
+		000000000000000020000010 /* PhotoTranslateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000010000010; };
+		000000000000000020000011 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000010000011; };
+		000000000000000020000012 /* LinguaPawTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000010000012; };
 		000000000000000010000000 /* LinguaPawApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinguaPawApp.swift; sourceTree = "<group>"; };
 		000000000000000010000001 /* Translation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models/Translation.swift; sourceTree = "<group>"; };
 		000000000000000010000002 /* AppConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/AppConfig.swift; sourceTree = "<group>"; };
@@ -30,6 +36,12 @@
 		00000000000000001000000A /* TranslationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/TranslationView.swift; sourceTree = "<group>"; };
 		00000000000000001000000B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		00000000000000001000000C /* PrivacyPolicyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/PrivacyPolicyView.swift; sourceTree = "<group>"; };
+		00000000000000001000000D /* TranslationCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/TranslationCardView.swift; sourceTree = "<group>"; };
+		00000000000000001000000E /* DownloadPromptView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/DownloadPromptView.swift; sourceTree = "<group>"; };
+		00000000000000001000000F /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/HistoryView.swift; sourceTree = "<group>"; };
+		000000000000000010000010 /* PhotoTranslateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/PhotoTranslateView.swift; sourceTree = "<group>"; };
+		000000000000000010000011 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/MainTabView.swift; sourceTree = "<group>"; };
+		000000000000000010000012 /* LinguaPawTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinguaPawTheme.swift; sourceTree = "<group>"; };
 		300000000000000000000001 /* LinguaPaw.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LinguaPaw.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		300000000000000000000002 /* LinguaPaw */ = {isa = PBXGroup; children = (
 			000000000000000010000000 /* LinguaPawApp.swift */,
@@ -44,7 +56,14 @@
 			000000000000000010000009 /* SettingsView.swift */,
 			00000000000000001000000A /* TranslationView.swift */,
 			00000000000000001000000B /* Assets.xcassets */,
-			00000000000000001000000C /* PrivacyPolicyView.swift */,); path = LinguaPaw; sourceTree = "<group>"; };
+			00000000000000001000000C /* PrivacyPolicyView.swift */,
+			00000000000000001000000D /* TranslationCardView.swift */,
+			00000000000000001000000E /* DownloadPromptView.swift */,
+			00000000000000001000000F /* HistoryView.swift */,
+			000000000000000010000010 /* PhotoTranslateView.swift */,
+			000000000000000010000011 /* MainTabView.swift */,
+			000000000000000010000012 /* LinguaPawTheme.swift */,
+		); path = LinguaPaw; sourceTree = "<group>"; };
 		300000000000000000000003 /* Products */ = {isa = PBXGroup; children = (300000000000000000000001 /* LinguaPaw.app */,); name = Products; sourceTree = "<group>"; };
 		300000000000000000000004 /* LinguaPaw */ = {isa = PBXNativeTarget; buildConfigurationList = 300000000000000000000007 /* Build configuration list for PBXNativeTarget "LinguaPaw" */; buildPhases = (300000000000000000000005 /* Sources */, 300000000000000000000006 /* Frameworks */, 300000000000000000000015 /* Resources */,); buildRules = (); dependencies = (); name = LinguaPaw; productName = LinguaPaw; productReference = 300000000000000000000001 /* LinguaPaw.app */; productType = "com.apple.product-type.application"; };
 		300000000000000000000008 /* Project */ = {isa = PBXProject; attributes = {LastUpgradeCheck = 1600; TargetAttributes = {300000000000000000000004 = {CreatedOnToolsVersion = 16.0;};};}; buildConfigurationList = 300000000000000000000009 /* Build configuration list for PBXProject "LinguaPaw" */; compatibilityVersion = "Xcode 14.0"; developmentRegion = en; hasScannedForEncodings = 0; knownRegions = (en, Base,); mainGroup = 300000000000000000000010; productRefGroup = 300000000000000000000003 /* Products */; projectDirPath = ""; projectRoot = ""; targets = (300000000000000000000004 /* LinguaPaw */,); };
@@ -61,7 +80,14 @@
 			000000000000000020000008 /* OnboardingView.swift in Sources */,
 			000000000000000020000009 /* SettingsView.swift in Sources */,
 			00000000000000002000000A /* TranslationView.swift in Sources */,
-			00000000000000002000000C /* PrivacyPolicyView.swift in Sources */,); runOnlyForDeploymentPostprocessing = 0; };
+			00000000000000002000000C /* PrivacyPolicyView.swift in Sources */,
+			00000000000000002000000D /* TranslationCardView.swift in Sources */,
+			00000000000000002000000E /* DownloadPromptView.swift in Sources */,
+			00000000000000002000000F /* HistoryView.swift in Sources */,
+			000000000000000020000010 /* PhotoTranslateView.swift in Sources */,
+			000000000000000020000011 /* MainTabView.swift in Sources */,
+			000000000000000020000012 /* LinguaPawTheme.swift in Sources */,
+		); runOnlyForDeploymentPostprocessing = 0; };
 		300000000000000000000006 /* Frameworks */ = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
 		300000000000000000000015 /* Resources */ = {isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (
 			00000000000000002000000B /* Assets.xcassets in Resources */,); runOnlyForDeploymentPostprocessing = 0; };
