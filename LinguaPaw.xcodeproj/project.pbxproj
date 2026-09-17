@@ -23,6 +23,12 @@
 		000000000000000020000010 /* PhotoTranslateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000010000010; };
 		000000000000000020000011 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000010000011; };
 		000000000000000020000012 /* LinguaPawTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000010000012; };
+		000000000000000020000013 /* CameraService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000010000013; };
+		000000000000000020000014 /* CameraPreviewLayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000010000014; };
+		000000000000000020000015 /* TextRecognitionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000010000015; };
+		000000000000000020000016 /* SpeechSynthesizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000010000016; };
+		000000000000000020000017 /* PhotoResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000010000017; };
+		000000000000000020000018 /* CompactTranslateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000010000018; };
 		000000000000000010000000 /* LinguaPawApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinguaPawApp.swift; sourceTree = "<group>"; };
 		000000000000000010000001 /* Translation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models/Translation.swift; sourceTree = "<group>"; };
 		000000000000000010000002 /* AppConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/AppConfig.swift; sourceTree = "<group>"; };
@@ -42,6 +48,12 @@
 		000000000000000010000010 /* PhotoTranslateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/PhotoTranslateView.swift; sourceTree = "<group>"; };
 		000000000000000010000011 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/MainTabView.swift; sourceTree = "<group>"; };
 		000000000000000010000012 /* LinguaPawTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinguaPawTheme.swift; sourceTree = "<group>"; };
+		000000000000000010000013 /* CameraService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/CameraService.swift; sourceTree = "<group>"; };
+		000000000000000010000014 /* CameraPreviewLayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/CameraPreviewLayerView.swift; sourceTree = "<group>"; };
+		000000000000000010000015 /* TextRecognitionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/TextRecognitionService.swift; sourceTree = "<group>"; };
+		000000000000000010000016 /* SpeechSynthesizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/SpeechSynthesizer.swift; sourceTree = "<group>"; };
+		000000000000000010000017 /* PhotoResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/PhotoResultView.swift; sourceTree = "<group>"; };
+		000000000000000010000018 /* CompactTranslateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/CompactTranslateView.swift; sourceTree = "<group>"; };
 		300000000000000000000001 /* LinguaPaw.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LinguaPaw.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		300000000000000000000002 /* LinguaPaw */ = {isa = PBXGroup; children = (
 			000000000000000010000000 /* LinguaPawApp.swift */,
@@ -63,6 +75,12 @@
 			000000000000000010000010 /* PhotoTranslateView.swift */,
 			000000000000000010000011 /* MainTabView.swift */,
 			000000000000000010000012 /* LinguaPawTheme.swift */,
+			000000000000000010000013 /* CameraService.swift */,
+			000000000000000010000014 /* CameraPreviewLayerView.swift */,
+			000000000000000010000015 /* TextRecognitionService.swift */,
+			000000000000000010000016 /* SpeechSynthesizer.swift */,
+			000000000000000010000017 /* PhotoResultView.swift */,
+			000000000000000010000018 /* CompactTranslateView.swift */,
 		); path = LinguaPaw; sourceTree = "<group>"; };
 		300000000000000000000003 /* Products */ = {isa = PBXGroup; children = (300000000000000000000001 /* LinguaPaw.app */,); name = Products; sourceTree = "<group>"; };
 		300000000000000000000004 /* LinguaPaw */ = {isa = PBXNativeTarget; buildConfigurationList = 300000000000000000000007 /* Build configuration list for PBXNativeTarget "LinguaPaw" */; buildPhases = (300000000000000000000005 /* Sources */, 300000000000000000000006 /* Frameworks */, 300000000000000000000015 /* Resources */,); buildRules = (); dependencies = (); name = LinguaPaw; productName = LinguaPaw; productReference = 300000000000000000000001 /* LinguaPaw.app */; productType = "com.apple.product-type.application"; };
@@ -87,6 +105,12 @@
 			000000000000000020000010 /* PhotoTranslateView.swift in Sources */,
 			000000000000000020000011 /* MainTabView.swift in Sources */,
 			000000000000000020000012 /* LinguaPawTheme.swift in Sources */,
+			000000000000000020000013 /* CameraService.swift in Sources */,
+			000000000000000020000014 /* CameraPreviewLayerView.swift in Sources */,
+			000000000000000020000015 /* TextRecognitionService.swift in Sources */,
+			000000000000000020000016 /* SpeechSynthesizer.swift in Sources */,
+			000000000000000020000017 /* PhotoResultView.swift in Sources */,
+			000000000000000020000018 /* CompactTranslateView.swift in Sources */,
 		); runOnlyForDeploymentPostprocessing = 0; };
 		300000000000000000000006 /* Frameworks */ = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
 		300000000000000000000015 /* Resources */ = {isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (
