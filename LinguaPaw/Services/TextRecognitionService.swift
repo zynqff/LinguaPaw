@@ -6,8 +6,17 @@ struct RecognizedTextBlock: Identifiable {
     /// Текст, как его распознал Vision.
     let text: String
     /// Нормализованный прямоугольник (0...1), система координат Vision:
-    /// начало координат — левый нижний угол.
+    /// начало координат — левый нижний угол. Всегда осе-выровнен — для
+    /// наклонных строк не подходит для наложения перевода, оставлен только
+    /// для отладки/совместимости.
     let boundingBox: CGRect
+    /// Четыре угла строки в тех же нормализованных координатах Vision, но с
+    /// учётом её реального поворота — именно по ним нужно накладывать перевод,
+    /// чтобы он шёл вдоль оригинального текста при любом наклоне фото.
+    let topLeft: CGPoint
+    let topRight: CGPoint
+    let bottomLeft: CGPoint
+    let bottomRight: CGPoint
 }
 
 enum TextRecognitionError: LocalizedError {
@@ -36,7 +45,14 @@ enum TextRecognitionService {
                 let observations = (request.results as? [VNRecognizedTextObservation]) ?? []
                 let blocks = observations.compactMap { observation -> RecognizedTextBlock? in
                     guard let candidate = observation.topCandidates(1).first else { return nil }
-                    return RecognizedTextBlock(text: candidate.string, boundingBox: observation.boundingBox)
+                    return RecognizedTextBlock(
+                        text: candidate.string,
+                        boundingBox: observation.boundingBox,
+                        topLeft: observation.topLeft,
+                        topRight: observation.topRight,
+                        bottomLeft: observation.bottomLeft,
+                        bottomRight: observation.bottomRight
+                    )
                 }
                 if blocks.isEmpty {
                     continuation.resume(throwing: TextRecognitionError.noTextFound)
