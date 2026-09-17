@@ -244,9 +244,13 @@ final class TranslatorViewModel: ObservableObject {
     }
 
     /// Пользователь подтвердил загрузку найденного обновления.
-    func installAvailableUpdate() async {
-        guard case .available(let remote) = updateCheckStatus else { return }
-        updateCheckStatus = .idle
+    /// Конфиг обновления передаётся явно (а не читается из `updateCheckStatus`),
+    /// потому что тап по кнопке алерта и автоматический сброс `isPresented`
+    /// (который переводит `updateCheckStatus` обратно в `.idle`) происходят
+    /// практически одновременно — если бы мы читали `updateCheckStatus` здесь,
+    /// в момент запуска этой async-задачи он мог уже стать `.idle`, и загрузка
+    /// просто не начиналась бы (guard молча возвращался).
+    func installAvailableUpdate(_ remote: RemoteAppConfig) async {
         do {
             try await downloadAndInstall(model: remote.model)
             modelURL = await modelStore.localURL(fileName: remote.model.fileName)
