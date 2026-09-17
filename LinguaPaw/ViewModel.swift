@@ -170,8 +170,10 @@ final class TranslatorViewModel: ObservableObject {
         let translated = preview.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !source.isEmpty, !translated.isEmpty else { return }
         let item = TranslationItem(source: source, translated: translated, sourceLang: sourceLanguage, targetLang: targetLanguage, date: .now)
+        // Пишем только в текущую (видимую на экране «Текст») сессию. В постоянный
+        // архив («История») она уйдёт целиком при уходе приложения в фон —
+        // см. appDidEnterBackground().
         history.append(item)
-        HistoryStore.shared.add(item)
         previewTask?.cancel()
         previewGeneration += 1
         sourceText = ""
@@ -194,9 +196,14 @@ final class TranslatorViewModel: ObservableObject {
 
     func clearScreen() { history.removeAll() }
 
-    /// Пользователь подтвердил очистку истории переводов в диалоге.
-    func clearHistoryConfirmed() {
+    /// Экран «Текст»: очищает только текущую, ещё не заархивированную сессию.
+    /// Постоянного архива («История») не касается.
+    func clearSessionConfirmed() {
         history.removeAll()
+    }
+
+    /// Экран «История»: полностью и необратимо очищает постоянный архив переводов.
+    func clearArchivedHistoryConfirmed() {
         HistoryStore.shared.clearAll()
     }
 
@@ -263,7 +270,17 @@ final class TranslatorViewModel: ObservableObject {
 
     func appDidEnterBackground() {
         idleTask?.cancel()
+        archiveSessionAndClearScreen()
         Task { await translator.unloadModel(); await syncState() }
+    }
+
+    /// Переносит все переводы текущей (видимой) сессии в постоянный архив и
+    /// очищает экран «Текст» — при следующем открытии приложения он снова пуст,
+    /// а переводы находятся в «Истории».
+    private func archiveSessionAndClearScreen() {
+        guard !history.isEmpty else { return }
+        for item in history { HistoryStore.shared.add(item) }
+        history.removeAll()
     }
 
     private func scheduleIdleUnload() {
