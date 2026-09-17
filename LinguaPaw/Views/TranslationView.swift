@@ -48,7 +48,7 @@ struct TranslationView: View {
                     Button { showSettings = true } label: { Image(systemName: "gearshape") }
                     if focused {
                         Button { finalizeOrDismiss() } label: { Image(systemName: "checkmark.circle.fill") }
-                            .tint(Color.accentColor)
+                            .tint(LinguaPawTheme.brandStart)
                     }
                 }
             }
@@ -127,7 +127,7 @@ struct TranslationView: View {
                         .font(.footnote.weight(.semibold))
                         .frame(width: 34, height: 34)
                         .background(.regularMaterial, in: Circle())
-                        .foregroundStyle(Color.accentColor)
+                        .foregroundStyle(LinguaPawTheme.brandStart)
                 }
                 .buttonStyle(.plain)
             }
@@ -136,11 +136,11 @@ struct TranslationView: View {
             VStack(alignment: .leading, spacing: 10) {
                 Text(languageAutonym(vm.targetLanguage))
                     .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(Color.accentColor)
+                    .foregroundStyle(LinguaPawTheme.brandStart)
 
                 Text(vm.preview.isEmpty ? "Enter text" : vm.preview)
                     .font(.system(size: 24, weight: .bold))
-                    .foregroundStyle(vm.preview.isEmpty ? Color.secondary : Color.accentColor)
+                    .foregroundStyle(vm.preview.isEmpty ? Color.secondary : LinguaPawTheme.brandStart)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(16)
