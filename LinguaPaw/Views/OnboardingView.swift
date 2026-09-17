@@ -37,6 +37,12 @@ struct OnboardingView: View {
             isConsent: false
         ),
         .init(
+            image: "onboarding-photo",
+            title: "Перевод по фото",
+            text: "Сфотографируйте текст или загрузите изображение из галереи. Наведите камеру на вывеску, документ или рукописный текст — приложение распознает и переведёт его автоматически.",
+            isConsent: false
+        ),
+        .init(
             image: "onboarding-privacy",
             title: "Всё готово",
             text: "",
