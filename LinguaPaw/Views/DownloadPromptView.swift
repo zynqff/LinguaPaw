@@ -11,22 +11,27 @@ struct DownloadPromptView: View {
         VStack(spacing: 24) {
             Spacer(minLength: 8)
 
-            Image("main-download-model")
-                .resizable()
-                .scaledToFit()
-                .frame(maxWidth: 320, maxHeight: 320)
+            // Картинка и текст сгруппированы вместе с небольшим отступом,
+            // чтобы между ними не было большого пустого расстояния — крупные
+            // отступы (24) остаются только между этой группой, кнопкой и спейсерами.
+            VStack(spacing: 4) {
+                Image("main-download-model")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(maxWidth: 280, maxHeight: 220)
 
-            VStack(spacing: 10) {
-                Text("Скачайте модель, чтобы начать")
-                    .font(.title2.bold())
-                    .multilineTextAlignment(.center)
+                VStack(spacing: 10) {
+                    Text("Скачайте модель, чтобы начать")
+                        .font(.title2.bold())
+                        .multilineTextAlignment(.center)
 
-                Text("Модель переводчика работает полностью офлайн — без интернета.")
-                    .font(.body)
-                    .foregroundStyle(.secondary)
-                    .multilineTextAlignment(.center)
+                    Text("Модель переводчика работает полностью офлайн — без интернета.")
+                        .font(.body)
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
+                }
+                .padding(.horizontal, 32)
             }
-            .padding(.horizontal, 32)
 
             Button {
                 Task {
