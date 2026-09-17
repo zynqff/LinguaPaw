@@ -186,6 +186,23 @@ final class TranslatorViewModel: ObservableObject {
         schedulePreview()
     }
 
+    /// Гарантирует, что модель скачана и загружена в память. Используется
+    /// сценариями, не привязанными к обычному полю ввода на экране «Текст» —
+    /// перевод по фото, (в будущем) голосовой ввод.
+    func ensureModelReady() async throws {
+        if await translator.currentState() == .unloaded {
+            try await ensureModel()
+            if let modelURL { try await translator.loadModel(path: modelURL) }
+        }
+    }
+
+    /// Разовый перевод произвольного текста в сторону — не трогает
+    /// sourceText/preview экрана «Текст». Используется для перевода по фото.
+    func translateStandalone(_ text: String, from sourceLang: String, to targetLang: String) async throws -> String {
+        try await ensureModelReady()
+        return try await translator.translate(text: text, sourceLang: sourceLang, targetLang: targetLang, onToken: { _ in })
+    }
+
     /// Стирает набранный, ещё не подтверждённый текст (крестик), не трогая историю.
     func clearInput() {
         previewTask?.cancel()
