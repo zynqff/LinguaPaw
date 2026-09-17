@@ -57,10 +57,9 @@ struct TranslationView: View {
         }
         .onChange(of: scenePhase) { phase in if phase == .background { vm.appDidEnterBackground() } }
         .alert("Ошибка", isPresented: Binding(get: { vm.errorMessage != nil }, set: { if !$0 { vm.errorMessage = nil } })) { Button("OK") {} } message: { Text(vm.errorMessage ?? "") }
-        .confirmationDialog(
+        .alert(
             "Очистить текущий перевод?",
-            isPresented: $showClearConfirm,
-            titleVisibility: .visible
+            isPresented: $showClearConfirm
         ) {
             Button("Очистить", role: .destructive) {
                 vm.clearSessionConfirmed()
