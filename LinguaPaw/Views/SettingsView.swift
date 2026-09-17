@@ -88,7 +88,12 @@ struct SettingsView: View {
                 "Найдено обновление",
                 isPresented: isUpdateAvailablePresented
             ) {
-                Button("Загрузить") { Task { await vm.installAvailableUpdate() } }
+                // Конфиг забираем сразу, синхронно, до того как алерт закроется
+                // сам и сбросит vm.updateCheckStatus в .idle — иначе к моменту
+                // старта Task'а status мог уже смениться и загрузка не запускалась.
+                if case .available(let remote) = vm.updateCheckStatus {
+                    Button("Загрузить") { Task { await vm.installAvailableUpdate(remote) } }
+                }
                 Button("Отмена", role: .cancel) { vm.updateCheckStatus = .idle }
             } message: {
                 Text(availableUpdateMessage)
