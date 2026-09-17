@@ -14,7 +14,7 @@ struct DownloadPromptView: View {
             Image("main-download-model")
                 .resizable()
                 .scaledToFit()
-                .frame(maxWidth: 220, maxHeight: 220)
+                .frame(maxWidth: 320, maxHeight: 320)
 
             VStack(spacing: 10) {
                 Text("Скачайте модель, чтобы начать")
