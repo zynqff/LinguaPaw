@@ -58,3 +58,18 @@ private let languageAutonyms: [String: String] = [
 func languageAutonym(_ language: String) -> String {
     languageAutonyms[language] ?? language
 }
+
+/// BCP-47 коды для AVSpeechSynthesisVoice (озвучка перевода).
+private let languageSpeechCodes: [String: String] = [
+    "English": "en-US", "Russian": "ru-RU", "German": "de-DE", "French": "fr-FR", "Spanish": "es-ES",
+    "Italian": "it-IT", "Portuguese": "pt-PT", "Chinese": "zh-CN", "Japanese": "ja-JP", "Korean": "ko-KR",
+    "Arabic": "ar-SA", "Turkish": "tr-TR", "Dutch": "nl-NL", "Polish": "pl-PL", "Ukrainian": "uk-UA",
+    "Vietnamese": "vi-VN", "Thai": "th-TH", "Indonesian": "id-ID", "Malay": "ms-MY", "Hindi": "hi-IN",
+    "Bengali": "bn-IN", "Persian": "fa-IR", "Hebrew": "he-IL", "Czech": "cs-CZ", "Greek": "el-GR",
+    "Romanian": "ro-RO", "Hungarian": "hu-HU", "Swedish": "sv-SE", "Danish": "da-DK", "Finnish": "fi-FI",
+    "Norwegian": "nb-NO", "Slovak": "sk-SK", "Bulgarian": "bg-BG"
+]
+
+func speechLanguageCode(for language: String) -> String {
+    languageSpeechCodes[language] ?? "en-US"
+}
