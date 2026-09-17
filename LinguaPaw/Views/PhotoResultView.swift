@@ -47,9 +47,14 @@ struct PhotoResultView: View {
                             .background(Color.black.opacity(0.75))
                             .cornerRadius(4)
                             .position(x: rect.midX, y: rect.midY)
+                            .transition(.opacity)
                     }
 
-                    if isProcessing {
+                    // Индикатор держим на экране только пока не появился хотя бы
+                    // один переведённый блок — как только первая фраза готова,
+                    // прячем «Распознаём и переводим…» и дальше блоки просто
+                    // проступают по одному поверх фото, по мере перевода.
+                    if isProcessing && blocks.isEmpty {
                         VStack(spacing: 10) {
                             ProgressView()
                             Text("Распознаём и переводим…").font(.footnote)
@@ -100,12 +105,17 @@ struct PhotoResultView: View {
     private func process() async {
         do {
             let recognized = try await TextRecognitionService.recognizeText(in: image)
-            var translated: [TranslatedBlock] = []
             var lastBlockError: Error?
             for item in recognized {
                 do {
                     let text = try await vm.translateStandalone(item.text, from: vm.sourceLanguage, to: vm.targetLanguage)
-                    translated.append(TranslatedBlock(visionRect: item.boundingBox, text: text))
+                    // Добавляем блок сразу, как только он готов, а не все разом
+                    // в конце — перевод проступает по мере распознавания и
+                    // перевода каждой строки, и общий индикатор загрузки
+                    // прячется, как только появился первый блок (см. body).
+                    withAnimation(.easeOut(duration: 0.2)) {
+                        blocks.append(TranslatedBlock(visionRect: item.boundingBox, text: text))
+                    }
                 } catch {
                     // Не удалось перевести одну строку — не обрываем из-за неё
                     // весь перевод страницы, просто пропускаем эту строку.
@@ -114,12 +124,16 @@ struct PhotoResultView: View {
                     lastBlockError = error
                 }
             }
-            blocks = translated
-            if translated.isEmpty, let lastBlockError {
-                throw lastBlockError
+            // Ошибку показываем только если НИ ОДНОЙ строки не удалось перевести.
+            // Если хотя бы один блок уже на экране — не показываем алерт поверх
+            // уже переведённого текста, даже если остальные строки не перевелись.
+            if blocks.isEmpty, let lastBlockError {
+                errorMessage = lastBlockError.localizedDescription
             }
         } catch {
-            errorMessage = error.localizedDescription
+            if blocks.isEmpty {
+                errorMessage = error.localizedDescription
+            }
         }
         isProcessing = false
     }
