@@ -21,6 +21,45 @@ final class CameraService: NSObject, ObservableObject {
     private var photoContinuation: CheckedContinuation<UIImage, Error>?
     private var isConfigured = false
 
+    /// Физическая ориентация устройства (по акселерометру), а не ориентация
+    /// интерфейса — экран камеры зафиксирован в портрете, но снимать можно и
+    /// держа телефон боком. Без этого фото, снятое в альбомной ориентации,
+    /// получает EXIF-метаданные "портрет", и распознавание текста/наложение
+    /// перевода на фото затем работает неправильно.
+    private var currentVideoOrientation: AVCaptureVideoOrientation = .portrait
+
+    override init() {
+        super.init()
+        UIDevice.current.beginGeneratingDeviceOrientationNotifications()
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(deviceOrientationDidChange),
+            name: UIDevice.orientationDidChangeNotification,
+            object: nil
+        )
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+        UIDevice.current.endGeneratingDeviceOrientationNotifications()
+    }
+
+    nonisolated @objc private func deviceOrientationDidChange() {
+        let orientation = UIDevice.current.orientation
+        Task { @MainActor in
+            switch orientation {
+            case .portrait: self.currentVideoOrientation = .portrait
+            case .portraitUpsideDown: self.currentVideoOrientation = .portraitUpsideDown
+            // AVCaptureVideoOrientation .landscapeLeft/.landscapeRight зеркальны
+            // одноимённым UIDeviceOrientation — камера физически развёрнута
+            // относительно того, куда "смотрит" верх устройства.
+            case .landscapeLeft: self.currentVideoOrientation = .landscapeRight
+            case .landscapeRight: self.currentVideoOrientation = .landscapeLeft
+            default: break // faceUp/faceDown/unknown — оставляем последнюю известную
+            }
+        }
+    }
+
     func requestAccessAndConfigure() {
         switch AVCaptureDevice.authorizationStatus(for: .video) {
         case .authorized:
@@ -85,6 +124,9 @@ final class CameraService: NSObject, ObservableObject {
     func capturePhoto() async throws -> UIImage {
         try await withCheckedThrowingContinuation { continuation in
             self.photoContinuation = continuation
+            if let connection = photoOutput.connection(with: .video), connection.isVideoOrientationSupported {
+                connection.videoOrientation = currentVideoOrientation
+            }
             let settings = AVCapturePhotoSettings()
             if photoOutput.supportedFlashModes.contains(.on) {
                 settings.flashMode = isTorchOn ? .on : .off
