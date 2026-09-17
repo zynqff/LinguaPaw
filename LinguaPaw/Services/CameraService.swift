@@ -44,7 +44,7 @@ final class CameraService: NSObject, ObservableObject {
         UIDevice.current.endGeneratingDeviceOrientationNotifications()
     }
 
-    nonisolated @objc private func deviceOrientationDidChange() {
+    @objc nonisolated private func deviceOrientationDidChange() {
         let orientation = UIDevice.current.orientation
         Task { @MainActor in
             switch orientation {
