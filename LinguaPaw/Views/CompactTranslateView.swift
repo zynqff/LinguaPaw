@@ -17,7 +17,7 @@ struct CompactTranslateView: View {
                     Spacer()
                     Button { vm.swapLanguages() } label: {
                         Image(systemName: "arrow.up.arrow.down")
-                            .foregroundStyle(Color.accentColor)
+                            .foregroundStyle(LinguaPawTheme.brandStart)
                     }
                     .buttonStyle(.plain)
                     Spacer()
@@ -36,13 +36,13 @@ struct CompactTranslateView: View {
                     HStack(alignment: .top, spacing: 12) {
                         Text(vm.preview)
                             .font(.system(size: 21, weight: .semibold))
-                            .foregroundStyle(Color.accentColor)
+                            .foregroundStyle(LinguaPawTheme.brandStart)
                         Spacer()
                         Button {
                             speech.speak(vm.preview, language: vm.targetLanguage)
                         } label: {
                             Image(systemName: "speaker.wave.2.fill")
-                                .foregroundStyle(Color.accentColor)
+                                .foregroundStyle(LinguaPawTheme.brandStart)
                         }
                         .buttonStyle(.plain)
                     }
