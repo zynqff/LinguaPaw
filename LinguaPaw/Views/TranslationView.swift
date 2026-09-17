@@ -11,29 +11,31 @@ struct TranslationView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
-                statusBanner
+                if vm.config != nil && !vm.isModelInstalled {
+                    DownloadPromptView()
+                } else {
+                    ScrollViewReader { proxy in
+                        ScrollView {
+                            LazyVStack(spacing: 12) {
+                                if vm.history.isEmpty {
+                                    emptyState
+                                }
+                                ForEach(vm.history) { item in
+                                    TranslationCardView(item: item)
+                                }
+                                Color.clear.frame(height: 1).id("bottom")
+                            }.padding()
+                        }
+                        // Прокрутка истории вверх скрывает клавиатуру; чтобы показать
+                        // её снова — нужно нажать на поле ввода.
+                        .scrollDismissesKeyboard(.immediately)
+                        .onChange(of: vm.history.count) { _ in
+                            withAnimation { proxy.scrollTo("bottom", anchor: .bottom) }
+                        }
+                    }
 
-                ScrollViewReader { proxy in
-                    ScrollView {
-                        LazyVStack(spacing: 12) {
-                            if vm.history.isEmpty {
-                                emptyState
-                            }
-                            ForEach(vm.history) { item in
-                                TranslationCard(item: item)
-                            }
-                            Color.clear.frame(height: 1).id("bottom")
-                        }.padding()
-                    }
-                    // Прокрутка истории вверх скрывает клавиатуру; чтобы показать
-                    // её снова — нужно нажать на поле ввода.
-                    .scrollDismissesKeyboard(.immediately)
-                    .onChange(of: vm.history.count) { _ in
-                        withAnimation { proxy.scrollTo("bottom", anchor: .bottom) }
-                    }
+                    translateCard
                 }
-
-                translateCard
             }
             .navigationTitle("Перевод")
             .navigationBarTitleDisplayMode(.inline)
@@ -56,55 +58,22 @@ struct TranslationView: View {
         .onChange(of: scenePhase) { phase in if phase == .background { vm.appDidEnterBackground() } }
         .alert("Ошибка", isPresented: Binding(get: { vm.errorMessage != nil }, set: { if !$0 { vm.errorMessage = nil } })) { Button("OK") {} } message: { Text(vm.errorMessage ?? "") }
         .confirmationDialog(
-            "Вы уверены, что хотите очистить историю переводов?",
+            "Очистить текущий перевод?",
             isPresented: $showClearConfirm,
             titleVisibility: .visible
         ) {
             Button("Очистить", role: .destructive) {
-                vm.clearHistoryConfirmed()
+                vm.clearSessionConfirmed()
                 showClearedSuccess = true
             }
             Button("Отмена", role: .cancel) {}
+        } message: {
+            Text("Это действие нельзя отменить. Переводы, уже сохранённые в «Истории», не затрагиваются.")
         }
         .alert("Готово", isPresented: $showClearedSuccess) {
             Button("ОК") {}
         } message: {
-            Text("История переводов успешно очищена.")
-        }
-    }
-
-    // MARK: - Баннер состояния модели (всегда виден, не требует скролла)
-
-    @ViewBuilder
-    private var statusBanner: some View {
-        if vm.isModelDownloading {
-            VStack(alignment: .leading, spacing: 6) {
-                Text("Загрузка модели перевода…").font(.subheadline.weight(.semibold))
-                HStack(spacing: 12) {
-                    ProgressView(value: vm.downloader.progress)
-                    Text("\(Int(vm.downloader.progress * 100))%").font(.caption.monospacedDigit()).foregroundStyle(.secondary)
-                }
-            }
-            .padding()
-            .background(Color.accentColor.opacity(0.12))
-        } else if vm.config != nil && !vm.isModelInstalled {
-            HStack {
-                Image(systemName: "arrow.down.circle.fill").font(.title2).foregroundStyle(Color.accentColor)
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("Нужно скачать модель перевода").font(.subheadline.weight(.semibold))
-                    if let size = vm.config?.model.sizeBytes {
-                        Text("Размер ~\(ByteCountFormatter.string(fromByteCount: size, countStyle: .file)), перевод работает офлайн").font(.caption).foregroundStyle(.secondary)
-                    }
-                }
-                Spacer()
-                Button("Загрузить") {
-                    Task {
-                        do { try await vm.ensureModel() } catch { vm.errorMessage = error.localizedDescription }
-                    }
-                }.buttonStyle(.borderedProminent)
-            }
-            .padding()
-            .background(.thinMaterial)
+            Text("Текущий перевод очищен.")
         }
     }
 
@@ -222,26 +191,3 @@ struct TranslationView: View {
     }
 }
 
-private struct TranslationCard: View {
-    let item: TranslationItem
-    var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Text(languageAutonym(item.sourceLang)).font(.caption).foregroundStyle(.secondary)
-            Text(item.source).font(.system(size: 19, weight: .semibold))
-
-            Divider()
-
-            HStack {
-                Text(languageAutonym(item.targetLang)).font(.caption).foregroundStyle(Color.accentColor)
-                Spacer()
-                Button { UIPasteboard.general.string = item.translated } label: {
-                    Image(systemName: "doc.on.doc")
-                }
-                .buttonStyle(.plain)
-            }
-            Text(item.translated).font(.system(size: 19, weight: .semibold)).foregroundStyle(Color.accentColor)
-        }
-        .padding()
-        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 16))
-    }
-}
