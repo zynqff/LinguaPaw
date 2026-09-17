@@ -101,11 +101,23 @@ struct PhotoResultView: View {
         do {
             let recognized = try await TextRecognitionService.recognizeText(in: image)
             var translated: [TranslatedBlock] = []
+            var lastBlockError: Error?
             for item in recognized {
-                let text = try await vm.translateStandalone(item.text, from: vm.sourceLanguage, to: vm.targetLanguage)
-                translated.append(TranslatedBlock(visionRect: item.boundingBox, text: text))
+                do {
+                    let text = try await vm.translateStandalone(item.text, from: vm.sourceLanguage, to: vm.targetLanguage)
+                    translated.append(TranslatedBlock(visionRect: item.boundingBox, text: text))
+                } catch {
+                    // Не удалось перевести одну строку — не обрываем из-за неё
+                    // весь перевод страницы, просто пропускаем эту строку.
+                    // Чем больше строк на фото, тем выше шанс споткнуться на
+                    // одной из них, поэтому раньше это часто ломало весь снимок.
+                    lastBlockError = error
+                }
             }
             blocks = translated
+            if translated.isEmpty, let lastBlockError {
+                throw lastBlockError
+            }
         } catch {
             errorMessage = error.localizedDescription
         }
