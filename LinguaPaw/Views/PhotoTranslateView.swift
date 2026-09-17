@@ -1,39 +1,23 @@
 import SwiftUI
 import PhotosUI
 
-private enum PhotoScreenMode {
-    case translate, camera, history
-}
-
-/// Вкладка «Фото»: три режима, переключаемых нижней капсулой — «Перевод»
-/// (текстовый ввод, компактно), «Камера» (живой превью + съёмка), «История»
-/// (тот же архив переводов, что и на одноимённой вкладке таб-бара).
+/// Вкладка «Фото»: всегда живой превью камеры + съёмка. Раньше здесь была
+/// ещё одна капсула-переключатель поверх нативного таб-бара («Перевод» /
+/// «Камера» / «История») — она дублировала вкладки «Текст» и «История»
+/// нижнего таб-бара и визуально давала «два бара» друг над другом, поэтому
+/// убрана целиком; на этом экране остаётся только камера.
 struct PhotoTranslateView: View {
     @EnvironmentObject var vm: TranslatorViewModel
     @StateObject private var camera = CameraService()
-    @State private var mode: PhotoScreenMode = .camera
     @State private var resultImage: UIImage?
     @State private var galleryItem: PhotosPickerItem?
     @State private var showGalleryPicker = false
     @State private var errorMessage: String?
 
     var body: some View {
-        ZStack(alignment: .bottom) {
-            Group {
-                switch mode {
-                case .camera: cameraContent
-                case .translate: CompactTranslateView()
-                case .history: HistoryView()
-                }
-            }
-
-            modeSwitcher
-        }
+        cameraContent
         .background(Color(.systemBackground))
-        .onAppear { if mode == .camera { camera.requestAccessAndConfigure() } }
-        .onChange(of: mode) { newMode in
-            if newMode == .camera { camera.requestAccessAndConfigure() } else { camera.stop() }
-        }
+        .onAppear { camera.requestAccessAndConfigure() }
         .onDisappear { camera.stop() }
         .photosPicker(isPresented: $showGalleryPicker, selection: $galleryItem, matching: .images)
         .onChange(of: galleryItem) { newItem in
@@ -76,7 +60,7 @@ struct PhotoTranslateView: View {
                 languagePairPill
                 captureControls
                     .padding(.top, 20)
-                    .padding(.bottom, 110)
+                    .padding(.bottom, 24)
             }
         }
     }
@@ -167,33 +151,5 @@ struct PhotoTranslateView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color(.systemBackground))
-    }
-
-    // MARK: - Переключатель режимов (нижняя капсула)
-
-    private var modeSwitcher: some View {
-        HStack(spacing: 4) {
-            modeButton(.translate, icon: "captions.bubble", title: "Перевод")
-            modeButton(.camera, icon: "camera.fill", title: "Камера")
-            modeButton(.history, icon: "clock.arrow.circlepath", title: "История")
-        }
-        .padding(6)
-        .background(.ultraThinMaterial, in: Capsule())
-        .environment(\.colorScheme, .dark)
-        .padding(.horizontal, 24)
-        .padding(.bottom, 8)
-    }
-
-    private func modeButton(_ target: PhotoScreenMode, icon: String, title: String) -> some View {
-        Button { mode = target } label: {
-            VStack(spacing: 4) {
-                Image(systemName: icon)
-                Text(title).font(.caption2.weight(.semibold))
-            }
-            .foregroundStyle(mode == target ? LinguaPawTheme.brandStart : Color.white.opacity(0.6))
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 8)
-        }
-        .buttonStyle(.plain)
     }
 }
