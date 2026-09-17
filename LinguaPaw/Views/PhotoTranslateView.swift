@@ -2,12 +2,12 @@ import SwiftUI
 import PhotosUI
 
 private enum PhotoScreenMode {
-    case translate, camera, conversation
+    case translate, camera, history
 }
 
 /// Вкладка «Фото»: три режима, переключаемых нижней капсулой — «Перевод»
-/// (текстовый ввод, компактно), «Камера» (живой превью + съёмка), «Общение»
-/// (заглушка — голосовой диалог, будет реализован по отдельному макету).
+/// (текстовый ввод, компактно), «Камера» (живой превью + съёмка), «История»
+/// (тот же архив переводов, что и на одноимённой вкладке таб-бара).
 struct PhotoTranslateView: View {
     @EnvironmentObject var vm: TranslatorViewModel
     @StateObject private var camera = CameraService()
@@ -23,7 +23,7 @@ struct PhotoTranslateView: View {
                 switch mode {
                 case .camera: cameraContent
                 case .translate: CompactTranslateView()
-                case .conversation: conversationPlaceholder
+                case .history: HistoryView()
                 }
             }
 
@@ -169,34 +169,13 @@ struct PhotoTranslateView: View {
         .background(Color(.systemBackground))
     }
 
-    // MARK: - Общение (заглушка)
-
-    private var conversationPlaceholder: some View {
-        VStack(spacing: 16) {
-            Spacer()
-            Image(systemName: "person.2.wave.2")
-                .font(.system(size: 44))
-                .foregroundStyle(.secondary)
-            Text("Режим «Общение»")
-                .font(.title2.bold())
-            Text("Голосовой диалог на двух языках. Экран в разработке — реализуем по отдельному макету.")
-                .font(.body)
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
-                .padding(.horizontal, 32)
-            Spacer()
-            Spacer()
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-    }
-
     // MARK: - Переключатель режимов (нижняя капсула)
 
     private var modeSwitcher: some View {
         HStack(spacing: 4) {
             modeButton(.translate, icon: "captions.bubble", title: "Перевод")
             modeButton(.camera, icon: "camera.fill", title: "Камера")
-            modeButton(.conversation, icon: "person.2.fill", title: "Общение")
+            modeButton(.history, icon: "clock.arrow.circlepath", title: "История")
         }
         .padding(6)
         .background(.ultraThinMaterial, in: Capsule())
